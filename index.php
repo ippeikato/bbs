@@ -16,18 +16,12 @@ try {
 	foreach($stmt as $row) {
 		array_push($posts, $row);
 	}
-	/* 下記ちょっとやってみたけど機能せず */
-	$name = $_POST['name'];
-	$content = $_POST['content'];
-
+	}
+	/* 修正するも機能せず*/
 	if (($name != "")) {
-		$sql = "insert into posts (name, content)";
-		$stmt = $dbh->query($sql);
-		
-}
-
-	} 
-
+		$stmt = $dbh->prepare("insert into posts ('name', 'content') values (?, ?)");
+		$stmt->execute(array($_POST['name'], $_POST['content']));
+	}
 } catch (PDOException $e) {
 	echo $e->getmessage();
 		exit;
