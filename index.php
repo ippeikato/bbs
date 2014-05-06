@@ -1,34 +1,28 @@
 <?php
-require_once('config.php');
+require_once ('config.php');
 
 function h($s) {
-	return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
 }
 
 $posts = array();
 
 try {
-	$dbh = new PDO(DSN, DB_USER, DB_PASSWORD);
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' &&
-	isset($_POST['content']) &&
-	isset($_POST['name'])) {
-	$stmt = $dbh->query('select * from posts');
-	foreach($stmt as $row) {
-		array_push($posts, $row);
-	}
-	}
-	/* 修正するも機能せず*/
-	if (($name != "")) {
-		$stmt = $dbh->prepare("insert into posts ('name', 'content') values (?, ?)");
-		$stmt->execute(array($_POST['name'], $_POST['content']));
-	}
+    $dbh = new PDO(DSN, DB_USER, DB_PASSWORD);
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['content']) && isset($_POST['name'])) {
+        $stmt = $dbh -> prepare("insert into posts (`name`, `content`) values (?, ?)");
+        $stmt -> execute(array($_POST['name'], $_POST['content']));
+    }
+    $stmt = $dbh -> query('select * from posts');
+    foreach ($stmt as $row) {
+        array_push($posts, $row);
+    }
 } catch (PDOException $e) {
-	echo $e->getmessage();
-		exit;
+    echo $e -> getmessage();
+    exit ;
 }
 
 $posts = array_reverse($posts);
-
 ?>
 <!DOCTYPE html>
 <hrml lang="ja">
@@ -47,7 +41,7 @@ $posts = array_reverse($posts);
 	<ul>
 		<?php if (count($posts)) : ?>
 		<?php foreach ($posts as $post) : ?>
-    		<li><?php echo h($post['name']), h($post['content']); ?></li>
+    		<li><?php echo h($post['name']),   h($post['content']); ?></li>
 		<?php endforeach; ?>
 		<?php else : ?>
 			<li>まだ投稿はありません。</li>
